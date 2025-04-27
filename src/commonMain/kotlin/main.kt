@@ -8,7 +8,7 @@ import kotlin.js.Promise
 
 var counter = 0
 val router = Router {
-    all("count") {
+    all("/count") {
         Response(
             "counter: ${counter++}"
         )
