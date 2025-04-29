@@ -1,5 +1,6 @@
 compatibility_date = "2022-08-11"
 name = "kt2cloudflare"
+#upload_source_maps = true # 暂时不清楚如何和kotlin结合
 
 [[kv_namespaces]]
 binding = "testKv"

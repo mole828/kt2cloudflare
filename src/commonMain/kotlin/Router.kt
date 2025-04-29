@@ -4,19 +4,19 @@ import org.w3c.fetch.Request
 import org.w3c.fetch.Response
 import org.w3c.fetch.ResponseInit
 
-typealias HandlerType = suspend()->Response
-class Router(
-    builder: Router.() -> Unit = {}
+typealias HandlerType<EnvType> = suspend(request: Request, env: EnvType)->Response
+class Router<EnvType>(
+    builder: Router<EnvType>.() -> Unit = {}
 ) {
-    private val routeMap = mutableMapOf<String, HandlerType>()
+    private val routeMap = mutableMapOf<String, HandlerType<EnvType>>()
     
     init {
         builder()
     }
-    fun all(path: String, f: HandlerType) {
+    fun all(path: String, f: HandlerType<EnvType>) {
         routeMap[path] = f
     }
-    suspend fun handle(request: Request): Response = coroutineScope {
+    suspend fun handle(request: Request, env: EnvType): Response = coroutineScope {
         val (proto, fullPath) = request.url.split("://")
         val (host, _path) = fullPath.split("/", limit = 2)
         val url = URL(request.url)
@@ -25,7 +25,7 @@ class Router(
         println("path: $path")
         routeMap[path]?.let {
             println("has handler: $path")
-            return@coroutineScope it.invoke()
+            return@coroutineScope it.invoke(request, env)
         }
 
         Response(
