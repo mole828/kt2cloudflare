@@ -1,0 +1,22 @@
+{
+    "configurations": [
+        {
+            "type": "gradle",
+            "name": "build",
+            "tasks": [":compileProductionExecutableKotlinJs"]
+        },
+        {
+            "type": "command",
+            "name": "deploy",
+            "program": "npx",
+            "dependsOn": ["build"],
+            "args": ["wrangler", "deploy", "index.mjs"]
+        },
+        {
+            "type": "command",
+            "name": "tail logs",
+            "program": "npx",
+            "args": ["wrangler", "tail"]
+        }
+    ]
+}
